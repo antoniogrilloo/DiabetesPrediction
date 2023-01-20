@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Dataset Diabetes
 
-Questo set di dati proviene originariamente dal National Institute of Diabetes and Digestive and Kidney Malattie. L'obiettivo è di prevedere diagnosticamente se un paziente ha il diabete, sulla base di determinate misurazioni diagnostiche. I dati sono tratti da un database più ampio. In particolare, tutti gli individui del dataset sono femmine di almeno 21 anni di origine Pima (un gruppo di nativi americani viventi in un territorio che attualmente comprende l'Arizona centrale e meridionale).
+Questo set di dati proviene originariamente dal National Institute of Diabetes and Digestive and Kidney Diseases. L'obiettivo è di prevedere diagnosticamente se un paziente ha il diabete, sulla base di determinate misurazioni diagnostiche. I dati sono tratti da un database più ampio. In particolare, tutti gli individui del dataset sono femmine di almeno 21 anni di origine Pima (un gruppo di nativi americani viventi in un territorio che attualmente comprende l'Arizona centrale e meridionale).
 
 Dal dataset nel file (`diabetes.csv`) possiamo trovare diverse variabili, alcune delle quali sono indipendenti (diverse variabili predittive mediche) e solo una variabile è dipendente dall'obiettivo (risultato).
 
@@ -41,25 +41,29 @@ Analisi degli attributi presenti nel dataset:
 
 ## Librerie ed import utilizzati
 
-Segue l'elenco delle librerie da installare per lo scopo del progetto (**NB DA VERIFICARE**):
+Segue l'elenco delle librerie da installare per lo scopo del progetto:
 
 ```{r eval=FALSE}
-install.packages(c("FactoMineR", "factoextra")) # Per PCA
+install.packages(c("FactoMineR", "factoextra"))
 install.packages("lattice")
 install.packages("dplyr")
+install.packages("lattice")
+install.packages("rpart")
+install.packages("rattle")
+install.packages("rpart.plot")
+install.packages("RColorBrewer")
+install.packages("pROC")
+install.packages("caret")
+install.packages("ROCR")
 ```
 
 Segue invece l'elenco delle librerie da importare:
 
 ```{r}
-#preprocessing dei dati
 library(dplyr)
-# Per PCA
-library("FactoMineR")
-library("factoextra")
-# Statistica descrittiva
-library("lattice")
-# Per decision tree
+library(FactoMineR)
+library(factoextra)
+library(lattice)
 library(rpart)
 library(rattle)
 library(rpart.plot)
@@ -124,8 +128,11 @@ dataset$SkinThickness[dataset$SkinThickness == 0] =
 dataset$Insulin[dataset$Insulin == 0] = meanInsulin
 dataset$BMI[dataset$BMI == 0] = meanBMI
 summary(dataset)
+```
 
+```{r}
 df = data.frame(colSums(dataset == 0))
+df
 ```
 
 In seguito, per comodità, vengono convertiti i valori assunti della variabile target `Outcome` in `Yes` per il valore `1` e `No` per il valore `0`.
