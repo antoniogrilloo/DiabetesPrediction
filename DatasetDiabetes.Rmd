@@ -439,8 +439,8 @@ Inoltre, è stato preso in considerazione il fatto che l'albero decisionale ha i
 
 Per quanto riguarda l'utilizzo del modello naive Bayes viene motivato dai seguenti punti:
 
--   Uno dei principali vantaggi del Classificatore Naive Bayes è il funzionamento ottimale anche con un set di addestramento di dimensioni ridotte. Questo vantaggio deriva dal fatto che il classificatore Naive Bayes è parametrizzato tramite la media e la varianza di ogni variabile indipendentemente da tutte le altre variabili. <https://help.alteryx.com/it/20223/designer/naive-bayes-classifier-tool>
--   Algoritmo molto semplice e veloce. Funziona bene sia sulla classificazione binaria sia su quella multiclasse. <https://pulplearning.altervista.org/naive-bayes-algoritmi-di-machine-learning/>
+-   Uno dei principali vantaggi del Classificatore Naive Bayes è il funzionamento ottimale anche con un set di addestramento di dimensioni ridotte. Questo vantaggio deriva dal fatto che il classificatore Naive Bayes è parametrizzato tramite la media e la varianza di ogni variabile indipendentemente da tutte le altre variabili [(6)](https://help.alteryx.com/it/20223/designer/naive-bayes-classifier-tool).
+-   Algoritmo molto semplice e veloce. Funziona bene sia sulla classificazione binaria sia su quella multiclasse [(7)](https://pulplearning.altervista.org/naive-bayes-algoritmi-di-machine-learning/).
 -   Esso esplicita la manipolazione delle probabilità ed è tra gli approcci più pratici a certi tipi di problemi di apprendimento (infatti Bayes compete con gli alberi di decisione e le reti neurali).
 
 ### Decision Tree
