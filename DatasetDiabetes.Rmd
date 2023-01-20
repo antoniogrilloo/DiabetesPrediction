@@ -13,7 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Dataset Diabetes
 
-**Descrizione del dominio di riferimento e obiettivi dell'elaborato**
+Questo set di dati proviene originariamente dal National Institute of Diabetes and Digestive and Kidney Malattie. L'obiettivo è di prevedere diagnosticamente se un paziente ha il diabete, sulla base di determinate misurazioni diagnostiche. I dati sono tratti da un database più ampio. In particolare, tutti gli individui del dataset sono femmine di almeno 21 anni di origine Pima (un gruppo di nativi americani viventi in un territorio che attualmente comprende l'Arizona centrale e meridionale).
+
+Dal dataset nel file (`diabetes.csv`) possiamo trovare diverse variabili, alcune delle quali sono indipendenti (diverse variabili predittive mediche) e solo una variabile è dipendente dall'obiettivo (risultato).
 
 Il dataset è reperibile al seguente link: <https://www.kaggle.com/datasets/whenamancodes/predict-diabities>.
 
@@ -184,6 +186,36 @@ barplot(table(trainset$Outcome),
 
 Come si può vedere dal precedente grafico, il numero degli individui che è negativo è in numero maggiore rispetto ai positivi.
 
+Segue il grafico che mostra l'istogramma che mostra il numeo di gravidanze degli individui:
+
+```{r}
+hist(trainset$Pregnancies, 
+     main = "Gravidanze", 
+     xlab="Numero di gravidanze")
+```
+
+Il seguente istogramma mostra il livello di glucosio negli individui:
+
+```{r}
+hist(trainset$Glucose, 
+     main = "Glucosio", 
+     xlab="Livello di glucosio")
+```
+
+Seguono i grafici che mostrano il valore della pressioine del sangue e dello spessore della pelle:
+
+```{r}
+hist(trainset$BloodPressure, 
+     main = "Pressione del sangue", 
+     xlab="valore della pressione del sangue")
+```
+
+```{r}
+hist(trainset$SkinThickness, 
+     main = "Spessore della pelle", 
+     xlab="Spessore")
+```
+
 Successivamente, viene presentato l'istogramma relativo ai livelli di insulina e quello sull'indice BMI degli individui.
 
 ```{r}
@@ -328,6 +360,14 @@ fviz_pca_var(res.pca, col.var = "black", axes = c(1,3))
 
 Anche in questo caso si ha un risultato analogo al precedente, tuttavia la varianza coperta da queste due dimensioni è minore rispetto alle precedenti. Quindi, risulta esser meglio rappresentata la variabile `Insulin` rispetto alla componente principale 1 e 3.
 
+Segue il grafico per le dimensioni 1 e 4:
+
+```{r}
+fviz_pca_var(res.pca, col.var = "black", axes = c(1,4))
+```
+
+Come si può notare dal grafico, praticamente tutte le variabili sono positivamente correlate dal momento che sono raggruppate in un unico punto. Tuttavia,la variabile `DiabetesPedigreeFunction` è l'unica non correlata con le altre. Inoltre, è quella meglio rappresentata dal momento che risulta più distante della altre dall'origine.
+
 #### Componenti Principali e individui
 
 Per vedere gli effetti delle PCA sugli individui del trainset viene effettuata una proiezione su un grafo:
@@ -356,6 +396,19 @@ fviz_pca_ind(res.pca,
 
 Anche in questo caso il risultato è quasi simile al precedente, anche se peggiore del primo.
 
+Infine, segue il grafico per le dimiensioni 1 e 4:
+
+```{r}
+ind = get_pca_ind(res.pca)
+fviz_pca_ind(res.pca,
+             axes = c(1, 4),
+             col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE)
+```
+
+In questo caso vi è una leggera prevalenza del valore `cos2` mediamente alto rispetto al grafico della componente 1 e 3.
+
 In seguito viene riportato il biplot delle prime due componenti principali, raggruppando anche i punti in base alla classe di appartenenza.
 
 ```{r}
@@ -374,11 +427,13 @@ I due modelli presi in considerazione sono gli alberi di decisione e il Naive Ba
 
 Per quanto riguarda la scelta del primo, questa è stata influenzata dalle seguenti motivazioni:
 
--   Risulta molto intuitivo e facile da analizzare, ciò permette di illustrare chiaramente i risultati ottenuti da esso.
+-   Risulta molto intuitivo e facile da analizzare e interpretare, ciò permette di illustrare chiaramente i risultati ottenuti da esso. Ciò risulta vantaggioso anche in ambito medico, come nel caso in questione.
 
 -   Sono in grado di funzionare discretamente bene anche se le assunzioni fatte sui dati dovessero essere violate.
 
-...
+-   Gli alberi decisionali eseguono implicitamente lo screening delle variabili o la selezione delle caratteristiche.
+
+-   Gli alberi decisionali richiedono uno sforzo relativamente ridotto da parte degli utenti per la preparazione dei dati.
 
 Inoltre, è stato preso in considerazione il fatto che l'albero decisionale ha il rischio di essere troppo specifico per il trainset (overfitting). Ciò è stato gestito durante lo sviluppo di tale modello.
 
@@ -542,7 +597,7 @@ cutoff = slot(pdt.acc.perf, "x.values")[[1]][ind]
 print(c(accuracy = pdt.acc, cutoff = cutoff))
 ```
 
-##### Conclusioni
+##### Analisi e conclusioni
 
 ### Naive Bayes
 
