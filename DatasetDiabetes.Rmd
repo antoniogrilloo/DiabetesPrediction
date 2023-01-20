@@ -17,6 +17,26 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Il dataset è reperibile al seguente link: <https://www.kaggle.com/datasets/whenamancodes/predict-diabities>.
 
+Analisi degli attributi presenti nel dataset:
+
+-   `Pregnancies`: esprime il numero di gravidanze.
+
+-   `Glucose`: esprime il livello di glucosio nel sangue. Soggetti sani hanno valori di glucosio nel sangue compresi tra 70 mg/dl e 140 mg/dl circa ([1](https://www.valorinormali.com/sangue/glicemia/)).
+
+-   `BloodPressure`: esprime il livello della pressione del sangue. Soggetti sani hanno valori di pressione sanguigna tra 80 mmHg e 129 mmHg circa ([2](https://www.omron-healthcare.it/it/salute-e-stile-di-vita/salute-del-cuore/gestione-della-pressione-arteriosa/comprendere-i-valori-e-i-grafici-della-pressione-arteriosa.html#:~:text=%C3%88%20considerata%20normale%20una%20pressione,superiore%20a%20140%2F90%20mmHg.)).
+
+-   `SkinThickness`: esprime lo spessore della pelle.
+
+-   `Insulin`: esprime il livello di insulina nel sangue. In Soggetti sani varia tra 5 e 125 micr.UI/ml ([3](https://www.valorinormali.com/sangue/insulina/)).
+
+-   `BMI`: esprime l'indice di massa corporea, in soggetti sani è compreso nell'intervallo 18,5-25 ([4](https://www.ars.toscana.it/aree-dintervento/determinanti-di-salute/428-alimentazione-attivita-fisica-e-peso-corporeo/peso-corporeo/approfondimenti/1078-lindice-di-massa-corporea.html#:~:text=Secondo%20l'Organizzazione%20mondiale%20della,il%20valore%20di%2018%2C5.)).
+
+-   `DiabetesPedigreeFunction`: esprime la probabilità di avere il diabete in base alla storia familiare ([5](https://towardsdatascience.com/easy-data-science-with-r-and-python-diabetes-among-the-pima-indians-an-exploratory-analysis-d7bc321d0fa7#:~:text=DiabetesPedigreeFunction%20%E2%80%94%20A%20function%20that%20determines,risk%20of%20type%202%20diabetes.)).
+
+-   `Age`: esprime l'eta del soggetto.
+
+-   `Outcome`: indica se il soggetto è diabetico oppure no.
+
 ## Librerie ed import utilizzati
 
 Segue l'elenco delle librerie da installare per lo scopo del progetto (**NB DA VERIFICARE**):
