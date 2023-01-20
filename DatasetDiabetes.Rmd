@@ -1,10 +1,10 @@
 ---
-title: "Dataset Diabetes"
-author: "Antonio Grillo"
-date: "`r Sys.Date()`"
+title: "Progetto di Machine Learning"
+author: "Antonio Grillo, Giacomo Motta, Gabriele Pandini"
+date: "25 Gennaio 2023"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -43,7 +43,7 @@ Analisi degli attributi presenti nel dataset:
 
 Segue l'elenco delle librerie da installare per lo scopo del progetto (**NB DA VERIFICARE**):
 
-```{r}
+```{r eval=FALSE}
 install.packages(c("FactoMineR", "factoextra")) # Per PCA
 install.packages("lattice")
 install.packages("dplyr")
@@ -319,8 +319,6 @@ xyplot(trainset$Insulin ~ trainset$Glucose,
 
 Dal precedente grafo si può notare che i dati hanno un ordinamento sparso tra di loro senza una vera e propria distinzione in base alle due variabili scelte.
 
-.......
-
 ### Analisi delle Componenti Principali
 
 Vengono selezionate le varibili quantitative per eseguire le PCA:
@@ -442,6 +440,7 @@ Per quanto riguarda l'utilizzo del modello naive Bayes viene motivato dai seguen
 -   Uno dei principali vantaggi del Classificatore Naive Bayes è il funzionamento ottimale anche con un set di addestramento di dimensioni ridotte. Questo vantaggio deriva dal fatto che il classificatore Naive Bayes è parametrizzato tramite la media e la varianza di ogni variabile indipendentemente da tutte le altre variabili [(6)](https://help.alteryx.com/it/20223/designer/naive-bayes-classifier-tool).
 -   Algoritmo molto semplice e veloce. Funziona bene sia sulla classificazione binaria sia su quella multiclasse [(7)](https://pulplearning.altervista.org/naive-bayes-algoritmi-di-machine-learning/).
 -   Esso esplicita la manipolazione delle probabilità ed è tra gli approcci più pratici a certi tipi di problemi di apprendimento (infatti Bayes compete con gli alberi di decisione e le reti neurali).
+-   È specificato che le variabili sono tra loro indipendenti e che i valori assunti dalla variabile target sono presi da un insieme di valori finiti.
 
 ### Decision Tree
 
@@ -491,8 +490,6 @@ rdt = confusionMatrix(dtp,
 rdt
 ```
 
-Commentare...
-
 Segue la matrice di confusione dell'albero potato:
 
 ```{r}
@@ -502,8 +499,6 @@ rpdt = confusionMatrix(pdtp,
                        mode = "prec_recall")
 rpdt
 ```
-
-Commentare...
 
 Viene mostrata ora la curva ROC dell'albero di decisone originale:
 
@@ -599,6 +594,88 @@ print(c(accuracy = pdt.acc, cutoff = cutoff))
 
 ##### Analisi e conclusioni
 
+In questa sezione verranno confrontati i risultati delle performance dei due alberi e, in base ad essi, verrà scelto il migliore.
+
+Principalmente, vengono confrontate le matrici di confusione dei due alberi:
+
+```{r}
+print("Albero normale: ")
+rdt$table
+print('-----------------')
+print("Albero pruned: ")
+rpdt$table
+```
+
+Analizzando le matrici di confusione si nota che l'albero pruned ha qualche errore in più nella predizione rispetto al non pruned. Infatti, si noti che il numero dei falsi positivi del pruned è maggiore di quello dell'albero normale.
+
+L'accuracy dei due modelli è la seguente:
+
+```{r}
+print("Albero normale: ")
+rdt$overall['Accuracy']
+print('-----------------')
+print("Albero pruned: ")
+rpdt$overall['Accuracy']
+```
+
+Da ciò segue che l'albero non potato ha una accuracy leggermente maggiore rispetto al pruned. Tuttavia, essendo il test set sbilanciato, in quanto ci sono molti più individui con `Outcome = No` rispetto a quelli con `Yes`, l'accuracy in questo caso potrebbe non essere una metrica significativa.
+
+Vengono mostrate le misure di precision e recall:
+
+```{r}
+print("Albero normale: ")
+rdt$byClass['Precision']
+print('-----------------')
+print("Albero pruned: ")
+rpdt$byClass['Precision']
+```
+
+Le precision risultanti hanno valori quasi simili. Quindi si può affermare che entrambi gli alberi hanno una precisione simile nel predirre le classi positive del test set. Questo porta a preferire l'albero non potato per il fatto che la sua precision è leggermente più alta dell'altro.
+
+```{r}
+print("Albero normale: ")
+rdt$byClass['Recall']
+print('-----------------')
+print("Albero pruned: ")
+rpdt$byClass['Recall']
+```
+
+Da quanto riportato, si può esservare che l'albero non potato ha una recall più alta di quello potato. Questo è un parametro di performance da tenere in considerazione soprattutto in ambito medico, visto che è importante essere sicuri che ogni minimo esempio considerato positivo da parte del modello venga sottoposto a ispezione umana (come nel caso in questione). Da ciò si può dedurre che è preferibile l'albero non potato.
+
+Segue anche la F-measure:
+
+```{r}
+print("Albero normale: ")
+rdt$byClass['F1']
+print('-----------------')
+print("Albero pruned: ")
+rpdt$byClass['F1']
+```
+
+L'albero non pruned ha un F1 maggiore rispetto all'altro. Questa misura riassume le misure di precision e recall essendo una media armonica delle due, e, anche se di poco, si può affermare che il primo albero sia preferibile al secondo.
+
+Seguono le curve ROC degli alberi:
+
+```{r}
+plot(dt.perf.tpr.rocr,
+     col = "darkblue",
+     main=paste("DT AUC:", 
+                round((dt.perf.rocr@y.values[[1]]), 4),
+                "  |  ",
+                "PDT AUC:", 
+                round(pdt.perf.rocr@y.values[[1]], 4)))
+plot(pdt.perf.tpr.rocr,
+     add = TRUE,
+     col = "red")
+abline(0, 1, lty = 2)
+legend("bottomright", legend=c("Albero normale", "Albero pruned"),
+       col=c("darkblue", "red"), lty=1, cex=0.8)
+```
+
+Da questo grafico si nota che l'albero normale ha una AUC maggiore rispetto al pruned. Ciò significa che si avvicina di più a quello che dovrebbe essere un classificatore ottimale.
+
+In conclusione, vista l'importanza in questo campo della misura di recall e viste le curve ROC con relativa area sotto la curva (AUC), si è deciso di utilizzare l'albero normale rispetto al pruned come modello.
+
 ### Naive Bayes
 
 Anche per bayes viene impostata una 10-fold cross validation:
@@ -638,7 +715,7 @@ nb.pred.nb = predict(nb, newdata = testset, type = "prob")[,2]
 nb.pred.rocr = prediction(nb.pred.nb, testset$Outcome) 
 nb.perf.tpr.rocr = performance(nb.pred.rocr, "tpr", "fpr")
 nb.perf.rocr = performance(nb.pred.rocr, measure = "auc", x.measure = "cutoff")
-plot(nb.perf.tpr.rocr, col = "blue", main=paste("AUC:",(nb.perf.rocr@y.values)))
+plot(nb.perf.tpr.rocr, main=paste("AUC:",(nb.perf.rocr@y.values)))
 abline(0, 1, lty = 2)
 ```
 
@@ -667,4 +744,96 @@ print(c(accuracy = nb.acc, cutoff = cutoff))
 
 ## Analisi risultati
 
+In questa sezione verranno confrontati i risultati delle performance dei due modelli e, in base ad essi, verrà scelto il migliore.
+
+Principalmente, vengono confrontate le matrici di confusione dell'albero di decisione e del classificatore bayesian:
+
+```{r}
+print("Albero: ")
+rdt$table
+print('-----------------')
+print("Naive Bayes: ")
+resultBayes$table
+```
+
+Analizzando le matrici di confusione, si nota che l'albero ha qualche errore in più nella predizione rispetto al naive Bayes. Infatti, si noti che il numero dei falsi positivi del bayesian è minore di quello dell'albero.
+
+L'accuracy dei due modelli è la seguente:
+
+```{r}
+print("Albero: ")
+rdt$overall['Accuracy']
+print('-----------------')
+print("Naive Bayes: ")
+resultBayes$overall['Accuracy']
+```
+
+Da ciò segue che l'albero ha una accuracy minore rispetto al bayesian. Tuttavia, essendo il test set sbilanciato, in quanto ci sono molti più individui con `Outcome = No` rispetto a quelli con `Yes`, l'accuracy in questo caso potrebbe non essere una metrica significativa.
+
+Vengono mostrate le misure di precision e recall:
+
+```{r}
+print("Albero: ")
+rdt$byClass['Precision']
+print('-----------------')
+print("Naive Bayes: ")
+resultBayes$byClass['Precision']
+```
+
+Le precision risultanti hanno poco discostanti. Quindi si può affermare che entrambi i modelli hanno una precisione quasi simile nel predirre le classi positive del test set. Questo porta a preferire il Naive Bayes per il fatto che la sua precision è leggermente più alta dell'altro.
+
+```{r}
+print("Albero: ")
+rdt$byClass['Recall']
+print('-----------------')
+print("Naive Bayes: ")
+resultBayes$byClass['Recall']
+```
+
+Da quanto riportato, si può esservare che il classificatore Naive Bayes ha una recall più alta dell'albero di decisione. Come già espresso in precedenza, questo è un parametro di performance da tenere in considerazione soprattutto in ambito medico, visto che è importante essere sicuri che ogni minimo esempio considerato positivo da parte del modello venga sottoposto a ispezione umana (come nel caso in questione). Da ciò si può dedurre che è preferibile il Naive Bayes.
+
+Segue anche la F-measure:
+
+```{r}
+print("Albero: ")
+rdt$byClass['F1']
+print('-----------------')
+print("Naive Bayes: ")
+resultBayes$byClass['F1']
+```
+
+L'albero ha un F1 minore rispetto a Naive Bayes. Questa misura riassume le misure di precision e recall essendo una media armonica delle due, e, anche se di poco, si può affermare che il primo albero sia preferibile al secondo.
+
+Seguono le curve ROC dei modelli:
+
+```{r}
+plot(dt.perf.tpr.rocr,
+     col = "darkblue",
+     main=paste("Tree AUC:", 
+                round((dt.perf.rocr@y.values[[1]]), 4),
+                "  |  ",
+                "Bayes AUC:", 
+                round(nb.perf.rocr@y.values[[1]], 4)))
+plot(nb.perf.tpr.rocr,
+     add = TRUE,
+     col = "red")
+abline(0, 1, lty = 2)
+legend("bottomright", legend=c("Albero di decisione", 
+                               "Naive Bayes"),
+       col=c("darkblue", "red"), 
+       lty=1, cex=0.8)
+```
+
+Da questo grafico si nota che l'albero normale ha una AUC minore rispetto al bayes. Ciò significa che si avvicina di più a quello che dovrebbe essere un classificatore ottimale.
+
 ## Conclusioni
+
+Nell'analisi di questo dataset, si è deciso di utilizzare e confrontare due modelli di machine learning: alberi di decisione e naive Bayes.
+
+Si sono svolti degli esperimenti su questi modelli, in particolare usando una 10-fold cross validation e illustrando le varie misure di performance.
+
+Inoltre, sono stati svolti degli esperimenti aggiuntivi anche sull'albero di decisione. Infatti, questi sono serviti per evitare l'overfitting dell'albero. Applicando i criteri di potatura e confrontando l'albero potato e quello normale, è risultato che l'albero normale è il migliore e quindi non c'è un rischio di sovradattare il dataset.
+
+In seguito, si sono confrontati i risultati degli esperimenti fatti con l'albero migliore e il classificatore Naive Bayes.
+
+L'analisi delle misure di performance riporta che il miglior classificatore tra i due è il naive Bayes. Infatti, esso possiede la maggiore precision, recall (molto importante essendo in ambito medico) e AUC della relativa curva ROC.
