@@ -4,7 +4,8 @@ author: "Antonio Grillo, Giacomo Motta, Gabriele Pandini"
 date: "25 Gennaio 2023"
 output:
   html_document: default
-  pdf_document: default
+  pdf_document: 
+    latex_engine: xelatex
 ---
 
 ```{r setup, include=FALSE}
@@ -25,15 +26,15 @@ Analisi degli attributi presenti nel dataset:
 
 -   `Glucose`: esprime il livello di glucosio nel sangue. Soggetti sani hanno valori di glucosio nel sangue compresi tra 70 mg/dl e 140 mg/dl circa ([1](https://www.valorinormali.com/sangue/glicemia/)).
 
--   `BloodPressure`: esprime il livello della pressione del sangue. Soggetti sani hanno valori di pressione sanguigna tra 80 mmHg e 129 mmHg circa ([2](https://www.omron-healthcare.it/it/salute-e-stile-di-vita/salute-del-cuore/gestione-della-pressione-arteriosa/comprendere-i-valori-e-i-grafici-della-pressione-arteriosa.html#:~:text=%C3%88%20considerata%20normale%20una%20pressione,superiore%20a%20140%2F90%20mmHg.)).
+-   `BloodPressure`: esprime il livello della pressione del sangue. Soggetti sani hanno valori di pressione sanguigna tra 80 mmHg e 129 mmHg circa ([2](https://www.omron-healthcare.it/it/salute-e-stile-di-vita/salute-del-cuore/gestione-della-pressione-arteriosa/comprendere-i-valori-e-i-grafici-della-pressione-arteriosa.html)).
 
 -   `SkinThickness`: esprime lo spessore della pelle.
 
 -   `Insulin`: esprime il livello di insulina nel sangue. In Soggetti sani varia tra 5 e 125 micr.UI/ml ([3](https://www.valorinormali.com/sangue/insulina/)).
 
--   `BMI`: esprime l'indice di massa corporea, in soggetti sani è compreso nell'intervallo 18,5-25 ([4](https://www.ars.toscana.it/aree-dintervento/determinanti-di-salute/428-alimentazione-attivita-fisica-e-peso-corporeo/peso-corporeo/approfondimenti/1078-lindice-di-massa-corporea.html#:~:text=Secondo%20l'Organizzazione%20mondiale%20della,il%20valore%20di%2018%2C5.)).
+-   `BMI`: esprime l'indice di massa corporea, in soggetti sani è compreso nell'intervallo 18,5-25 ([4](https://www.ars.toscana.it/aree-dintervento/determinanti-di-salute/428-alimentazione-attivita-fisica-e-peso-corporeo/peso-corporeo/approfondimenti/1078-lindice-di-massa-corporea.html)).
 
--   `DiabetesPedigreeFunction`: esprime la probabilità di avere il diabete in base alla storia familiare ([5](https://towardsdatascience.com/easy-data-science-with-r-and-python-diabetes-among-the-pima-indians-an-exploratory-analysis-d7bc321d0fa7#:~:text=DiabetesPedigreeFunction%20%E2%80%94%20A%20function%20that%20determines,risk%20of%20type%202%20diabetes.)).
+-   `DiabetesPedigreeFunction`: esprime la probabilità di avere il diabete in base alla storia familiare ([5](https://towardsdatascience.com/easy-data-science-with-r-and-python-diabetes-among-the-pima-indians-an-exploratory-analysis-d7bc321d0fa7)).
 
 -   `Age`: esprime l'eta del soggetto.
 
@@ -432,7 +433,7 @@ I due modelli presi in considerazione sono gli alberi di decisione e il Naive Ba
 
 Per quanto riguarda la scelta del primo, questa è stata influenzata dalle seguenti motivazioni:
 
--   Risulta molto intuitivo e facile da analizzare e interpretare, ciò permette di illustrare chiaramente i risultati ottenuti da esso. Ciò risulta vantaggioso anche in ambito medico, come nel caso in questione.
+-   Risulta molto intuitivo e facile da analizzare e interpretare, ciò permette di illustrare chiaramente i risultati ottenuti da esso. Quindi risulta vantaggioso anche in ambito medico, come nel caso in questione.
 
 -   Sono in grado di funzionare discretamente bene anche se le assunzioni fatte sui dati dovessero essere violate.
 
@@ -440,13 +441,13 @@ Per quanto riguarda la scelta del primo, questa è stata influenzata dalle segue
 
 -   Gli alberi decisionali richiedono uno sforzo relativamente ridotto da parte degli utenti per la preparazione dei dati.
 
-Inoltre, è stato preso in considerazione il fatto che l'albero decisionale ha il rischio di essere troppo specifico per il trainset (overfitting). Ciò è stato gestito durante lo sviluppo di tale modello.
+Inoltre, è stato preso in considerazione il fatto che l'albero decisionale ha il rischio di essere troppo specifico per il trainset (overfitting). Questo è stato gestito durante lo sviluppo di tale modello.
 
 Per quanto riguarda l'utilizzo del modello naive Bayes viene motivato dai seguenti punti:
 
 -   Uno dei principali vantaggi del Classificatore Naive Bayes è il funzionamento ottimale anche con un set di addestramento di dimensioni ridotte. Questo vantaggio deriva dal fatto che il classificatore Naive Bayes è parametrizzato tramite la media e la varianza di ogni variabile indipendentemente da tutte le altre variabili [(6)](https://help.alteryx.com/it/20223/designer/naive-bayes-classifier-tool).
 -   Algoritmo molto semplice e veloce. Funziona bene sia sulla classificazione binaria sia su quella multiclasse [(7)](https://pulplearning.altervista.org/naive-bayes-algoritmi-di-machine-learning/).
--   Esso esplicita la manipolazione delle probabilità ed è tra gli approcci più pratici a certi tipi di problemi di apprendimento (infatti Bayes compete con gli alberi di decisione e le reti neurali).
+-   Esso esplicita la manipolazione delle probabilità ed è tra gli approcci più pratici a certi tipi di problemi di apprendimento (infatti Bayes compete con gli alberi di decisione e le reti neurali).
 -   È specificato che le variabili sono tra loro indipendenti e che i valori assunti dalla variabile target sono presi da un insieme di valori finiti.
 
 ### Decision Tree
