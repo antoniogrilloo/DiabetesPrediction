@@ -320,6 +320,7 @@ Confronto l'insulina con il livello di glucosio nel sangue:
 xyplot(trainset$Insulin ~ trainset$Glucose, 
        data = trainset, 
        group = Outcome,
+       col=c("darkblue","red"),
        auto.key = TRUE,
        ylab = "Livello di insulina",
        xlab = "Livello di glucosio")
