@@ -3,9 +3,9 @@ title: "Progetto di Machine Learning"
 author: "Antonio Grillo, Giacomo Motta, Gabriele Pandini"
 date: "25 Gennaio 2023"
 output:
-  html_document: default
   pdf_document: 
     latex_engine: xelatex
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -44,7 +44,7 @@ Analisi degli attributi presenti nel dataset:
 
 Segue l'elenco delle librerie da installare per lo scopo del progetto:
 
-```{r eval=FALSE}
+```{r}
 install.packages(c("FactoMineR", "factoextra"))
 install.packages("lattice")
 install.packages("dplyr")
@@ -346,7 +346,7 @@ eig.val = get_eigenvalue(res.pca)
 eig.val
 ```
 
-Per l'analisi delle PCA, vengono scelte le prime quattro dimensioni che coprono circa il 72% della varianza, oltre che avere un valore degli autovalori che è maggiore di uno o approssimativamente vicino.
+Per l'analisi delle componenti principali, vengono scelte le prime quattro dimensioni che coprono circa il 72% della varianza, oltre che avere un valore degli autovalori che è maggiore di uno o approssimativamente vicino.
 
 #### Componenti Principali e variabili
 
@@ -472,7 +472,7 @@ Come si può notare, l'albero risultante è folto e potrebbe necessitare di una 
 plotcp(dt)
 ```
 
-Secondo la **documentazione**, il `cp` ottimale da scegliere è `cp = 0.057`.
+Secondo la [documentazione](https://www.rdocumentation.org/packages/rpart/versions/4.1.19/topics/plotcp), il `cp` ottimale da scegliere è `cp = 0.057`.
 
 Quindi effettuo una potatura sull'albero impostando l'opportuno `cp`.
 
@@ -485,7 +485,7 @@ pdt = rpart(Outcome ~ .,
 fancyRpartPlot(pdt)
 ```
 
-Una volta ottenuti i due alberi, vanno confrontati e misurate le performance di entrambi per poter scegliere il migliore albero.
+Una volta ottenuti i due alberi, vanno confrontati e misurate le performance di entrambi per poter scegliere il migliore.
 
 #### Confronti tra alberi
 
@@ -627,7 +627,7 @@ print("Albero pruned: ")
 rpdt$overall['Accuracy']
 ```
 
-Da ciò segue che l'albero non potato ha una accuracy leggermente maggiore rispetto al pruned. Tuttavia, essendo il test set sbilanciato, in quanto ci sono molti più individui con `Outcome = No` rispetto a quelli con `Yes`, l'accuracy in questo caso potrebbe non essere una metrica significativa.
+Da ciò segue che l'albero non potato ha una accuracy leggermente maggiore rispetto al pruned. Tuttavia, essendo il test set sbilanciato in quanto ci sono molti più individui con `Outcome = No` rispetto a quelli con `Yes`, l'accuracy in questo caso potrebbe non essere una metrica significativa.
 
 Vengono mostrate le misure di precision e recall:
 
